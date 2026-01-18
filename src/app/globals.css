@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 250 250 250;
+    --foreground: 31 41 55;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-[#FAFAFA] text-text antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+  
+  .gradient-primary {
+    @apply bg-gradient-to-r from-primary to-primary-dark;
+  }
+  
+  .gradient-accent {
+    @apply bg-gradient-to-r from-accent to-accent-dark;
+  }
+  
+  .card-base {
+    @apply bg-white rounded-2xl shadow-card transition-all duration-300;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-card-hover hover:-translate-y-1;
+  }
+  
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 
+           bg-primary hover:bg-primary-dark text-white font-semibold 
+           rounded-full transition-all duration-300 
+           hover:shadow-lg hover:-translate-y-0.5
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+  
+  .btn-accent {
+    @apply inline-flex items-center justify-center px-6 py-3 
+           bg-accent hover:bg-accent-dark text-white font-semibold 
+           rounded-full transition-all duration-300 
+           hover:shadow-lg hover:-translate-y-0.5
+           focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+  }
+  
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-6 py-3 
+           border-2 border-primary text-primary font-semibold 
+           rounded-full transition-all duration-300 
+           hover:bg-primary hover:text-white
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 
+           focus:border-primary focus:ring-2 focus:ring-primary/20 
+           outline-none transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+}
