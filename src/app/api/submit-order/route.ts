@@ -57,9 +57,17 @@ export async function POST(req: Request) {
             if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !process.env.GOOGLE_SHEET_ID) {
                 console.error('Missing Google Sheets credentials');
             } else {
+                // Handle both base64 and plain private key formats
+                let privateKey = process.env.GOOGLE_PRIVATE_KEY;
+                if (!privateKey.startsWith('-----BEGIN')) {
+                    // Decode base64 encoded key
+                    privateKey = Buffer.from(privateKey, 'base64').toString('utf-8');
+                }
+                privateKey = privateKey.replace(/\\n/g, '\n');
+
                 const serviceAccountAuth = new JWT({
                     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-                    key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+                    key: privateKey,
                     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
                 });
 
