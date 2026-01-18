@@ -66,6 +66,7 @@ function CheckoutContent() {
     const router = useRouter();
 
     // Get order details from URL params
+    const existingOrderId = searchParams.get("orderId") || ""; // Order ID from initial lead creation
     const productId = parseInt(searchParams.get("product") || "1");
     const quantity = parseInt(searchParams.get("quantity") || "1");
     const mealType = searchParams.get("mealType") || "dinner";
@@ -139,9 +140,34 @@ function CheckoutContent() {
                 name: "Saladly",
                 description: `${product.name} x ${quantity}`,
                 image: "/images/logo.png",
-                handler: function (response: RazorpayResponse) {
-                    // Payment successful
-                    router.push(`/order-success?orderId=${response.razorpay_payment_id}&method=online`);
+                handler: async function (response: RazorpayResponse) {
+                    // Payment successful - update existing order to Paid status
+                    try {
+                        const orderResponse = await fetch('/api/submit-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                orderId: existingOrderId, // Pass existing Order ID to UPDATE the row
+                                paymentStatus: 'Paid',
+                                name: customerName,
+                                phone: customerPhone,
+                                address: `${flatNo}, ${floor}, ${building}${landmark ? ', Near: ' + landmark : ''}`,
+                                coordinates: '',
+                                mapLink: '',
+                                details: isSubscription
+                                    ? `${totalMeals} Meals Plan @ ₹${pricePerMeal}/meal - ${mealType} - Schedule: ${schedule}`
+                                    : `${product.name} x ${quantity} - ${mealType} - ${deliveryDate}`,
+                                amount: total.toString(),
+                                deliveryInstructions: ''
+                            })
+                        });
+                        const orderData = await orderResponse.json();
+                        const orderId = orderData.orderId || existingOrderId || response.razorpay_payment_id;
+                        router.push(`/order-success?orderId=${orderId}&method=online`);
+                    } catch {
+                        // Fallback to existing Order ID or Razorpay ID
+                        router.push(`/order-success?orderId=${existingOrderId || response.razorpay_payment_id}&method=online`);
+                    }
                 },
                 prefill: {
                     name: customerName,

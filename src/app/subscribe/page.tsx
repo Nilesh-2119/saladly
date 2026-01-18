@@ -30,6 +30,22 @@ interface LocationData {
     address: string;
 }
 
+// Convert decimal degrees to DMS format (e.g., 18°33'37.8"N)
+function toDMS(decimal: number, isLat: boolean): string {
+    const direction = isLat ? (decimal >= 0 ? 'N' : 'S') : (decimal >= 0 ? 'E' : 'W');
+    const absDecimal = Math.abs(decimal);
+    const degrees = Math.floor(absDecimal);
+    const minutesDecimal = (absDecimal - degrees) * 60;
+    const minutes = Math.floor(minutesDecimal);
+    const seconds = ((minutesDecimal - minutes) * 60).toFixed(1);
+    return `${degrees}°${minutes}'${seconds}"${direction}`;
+}
+
+// Get full DMS string from coordinates
+function getCoordinatesDMS(lat: number, lng: number): string {
+    return `${toDMS(lat, true)} ${toDMS(lng, false)}`;
+}
+
 // Product data
 const products: Record<number, {
     id: number;
@@ -159,7 +175,7 @@ function SubscribeContent() {
     };
 
     // Handle proceed to checkout
-    const handleProceed = () => {
+    const handleProceed = async () => {
         // Validate user details (same as trial page)
         if (!location) {
             alert("Please select your delivery location on the map and click 'Confirm Location'");
@@ -178,30 +194,57 @@ function SubscribeContent() {
             return;
         }
 
-        const checkoutParams = new URLSearchParams({
-            product: productId.toString(),
-            type: "subscription",
-            plan: selectedPlan.meals.toString(),
-            pricePerMeal: selectedPlan.pricePerMeal.toString(),
-            mealType: mealType,
-            quantity: quantityPerDelivery.toString(),
-            schedule: deliverySchedule === "custom" ? customDays.join(",") : deliverySchedule,
-            startDate: startDate,
-            totalMeals: totalMeals.toString(),
-            totalPrice: totalPrice.toString(),
-            name: name,
-            phone: phone,
-            address: location.address,
-            lat: location.lat.toString(),
-            lng: location.lng.toString(),
-            flatNo: flatHouseNo,
-            floor: floorNo,
-            building: buildingName,
-            landmark: landmark,
-            instructions: deliveryInstructions,
-            addressType: addressType,
-        });
-        window.location.assign(`/checkout?${checkoutParams.toString()}`);
+        // Submit Lead to Backend and get Order ID
+        try {
+            const response = await fetch('/api/submit-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    date: new Date().toISOString(),
+                    paymentStatus: 'Abandoned Cart',
+                    name: name,
+                    phone: phone,
+                    address: `${flatHouseNo}, ${floorNo}, ${buildingName}${landmark ? ', Near: ' + landmark : ''}`,
+                    coordinates: getCoordinatesDMS(location.lat, location.lng),
+                    mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
+                    details: `${product.name} | ${selectedPlan.meals} Meals (₹${selectedPlan.pricePerMeal}/meal) | ${mealType} | ${quantityPerDelivery}/day | ${deliverySchedule === "custom" ? customDays.join(", ").toUpperCase() : deliverySchedule.toUpperCase()}`,
+                    amount: totalPrice.toString(),
+                    startDate: startDate,
+                    deliveryInstructions: deliveryInstructions
+                })
+            });
+            const data = await response.json();
+            const orderId = data.orderId || '';
+
+            const checkoutParams = new URLSearchParams({
+                orderId: orderId,
+                product: productId.toString(),
+                type: "subscription",
+                plan: selectedPlan.meals.toString(),
+                pricePerMeal: selectedPlan.pricePerMeal.toString(),
+                mealType: mealType,
+                quantity: quantityPerDelivery.toString(),
+                schedule: deliverySchedule === "custom" ? customDays.join(",") : deliverySchedule,
+                startDate: startDate,
+                totalMeals: totalMeals.toString(),
+                totalPrice: totalPrice.toString(),
+                name: name,
+                phone: phone,
+                address: location.address,
+                lat: location.lat.toString(),
+                lng: location.lng.toString(),
+                flatNo: flatHouseNo,
+                floor: floorNo,
+                building: buildingName,
+                landmark: landmark,
+                instructions: deliveryInstructions,
+                addressType: addressType,
+            });
+            window.location.assign(`/checkout?${checkoutParams.toString()}`);
+        } catch (err) {
+            console.error("Failed to save lead:", err);
+            alert("Something went wrong. Please try again.");
+        }
     };
 
     // Progress bar component

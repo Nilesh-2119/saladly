@@ -38,6 +38,22 @@ interface Product {
     category: "veg" | "non-veg";
 }
 
+// Convert decimal degrees to DMS format (e.g., 18°33'37.8"N)
+function toDMS(decimal: number, isLat: boolean): string {
+    const direction = isLat ? (decimal >= 0 ? 'N' : 'S') : (decimal >= 0 ? 'E' : 'W');
+    const absDecimal = Math.abs(decimal);
+    const degrees = Math.floor(absDecimal);
+    const minutesDecimal = (absDecimal - degrees) * 60;
+    const minutes = Math.floor(minutesDecimal);
+    const seconds = ((minutesDecimal - minutes) * 60).toFixed(1);
+    return `${degrees}°${minutes}'${seconds}"${direction}`;
+}
+
+// Get full DMS string from coordinates
+function getCoordinatesDMS(lat: number, lng: number): string {
+    return `${toDMS(lat, true)} ${toDMS(lng, false)}`;
+}
+
 // Sample product data - in real app, this would come from URL params or context
 const products: Record<number, Product> = {
     1: {
@@ -177,28 +193,54 @@ export default function TrialOrderPage({
         setIsSubmitting(true);
 
         if (action === "buy") {
-            // Build checkout URL with all order details
-            const checkoutParams = new URLSearchParams({
-                product: productId.toString(),
-                quantity: quantity.toString(),
-                mealType: mealType,
-                date: deliveryDate,
-                name: name,
-                phone: phone,
-                address: location.address,
-                lat: location.lat.toString(),
-                lng: location.lng.toString(),
-                flatNo: flatHouseNo,
-                floor: floorNo,
-                building: buildingName,
-                landmark: landmark,
-                instructions: deliveryInstructions,
-                addressType: addressType,
-            });
+            // Submit Lead to Backend and get Order ID
+            try {
+                const response = await fetch('/api/submit-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        date: new Date().toISOString(),
+                        paymentStatus: 'Abandoned Cart',
+                        name: name,
+                        phone: phone,
+                        address: `${flatHouseNo}, ${floorNo}, ${buildingName}${landmark ? ', Near: ' + landmark : ''}`,
+                        coordinates: getCoordinatesDMS(location.lat, location.lng),
+                        mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
+                        details: `${product.name} (x${quantity}) - ${mealType} - ${deliveryDate}`,
+                        amount: (product.price * quantity).toString(),
+                        deliveryInstructions: deliveryInstructions
+                    })
+                });
+                const data = await response.json();
+                const orderId = data.orderId || '';
 
-            // Redirect to checkout page
-            const checkoutUrl = `/checkout?${checkoutParams.toString()}`;
-            window.location.assign(checkoutUrl);
+                // Build checkout URL with Order ID
+                const checkoutParams = new URLSearchParams({
+                    orderId: orderId,
+                    product: productId.toString(),
+                    quantity: quantity.toString(),
+                    mealType: mealType,
+                    date: deliveryDate,
+                    name: name,
+                    phone: phone,
+                    address: location.address,
+                    lat: location.lat.toString(),
+                    lng: location.lng.toString(),
+                    flatNo: flatHouseNo,
+                    floor: floorNo,
+                    building: buildingName,
+                    landmark: landmark,
+                    instructions: deliveryInstructions,
+                    addressType: addressType,
+                });
+
+                // Redirect to checkout page
+                window.location.assign(`/checkout?${checkoutParams.toString()}`);
+            } catch (err) {
+                console.error("Failed to save lead:", err);
+                alert("Something went wrong. Please try again.");
+                setIsSubmitting(false);
+            }
         } else {
             // Add to cart (simulated)
             await new Promise((resolve) => setTimeout(resolve, 500));
