@@ -193,54 +193,49 @@ export default function TrialOrderPage({
         setIsSubmitting(true);
 
         if (action === "buy") {
-            // Submit Lead to Backend and get Order ID
-            try {
-                const response = await fetch('/api/submit-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        date: new Date().toISOString(),
-                        paymentStatus: 'Abandoned Cart',
-                        name: name,
-                        phone: phone,
-                        address: `${flatHouseNo}, ${floorNo}, ${buildingName}${landmark ? ', Near: ' + landmark : ''}`,
-                        coordinates: getCoordinatesDMS(location.lat, location.lng),
-                        mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
-                        details: `${product.name} (x${quantity}) - ${mealType} - ${deliveryDate}`,
-                        amount: (product.price * quantity).toString(),
-                        deliveryInstructions: deliveryInstructions
-                    })
-                });
-                const data = await response.json();
-                const orderId = data.orderId || '';
+            // Generate temporary Order ID client-side
+            const tempOrderId = `S-${Date.now().toString().slice(-6)}`;
 
-                // Build checkout URL with Order ID
-                const checkoutParams = new URLSearchParams({
-                    orderId: orderId,
-                    product: productId.toString(),
-                    quantity: quantity.toString(),
-                    mealType: mealType,
-                    date: deliveryDate,
+            // Fire API request in background (don't wait for response)
+            fetch('/api/submit-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    date: new Date().toISOString(),
+                    paymentStatus: 'Abandoned Cart',
                     name: name,
                     phone: phone,
-                    address: location.address,
-                    lat: location.lat.toString(),
-                    lng: location.lng.toString(),
-                    flatNo: flatHouseNo,
-                    floor: floorNo,
-                    building: buildingName,
-                    landmark: landmark,
-                    instructions: deliveryInstructions,
-                    addressType: addressType,
-                });
+                    address: `${flatHouseNo}, ${floorNo}, ${buildingName}${landmark ? ', Near: ' + landmark : ''}`,
+                    coordinates: getCoordinatesDMS(location.lat, location.lng),
+                    mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
+                    details: `${product.name} (x${quantity}) - ${mealType} - ${deliveryDate}`,
+                    amount: (product.price * quantity).toString(),
+                    deliveryInstructions: deliveryInstructions
+                }),
+                keepalive: true // Ensures request completes even after navigation
+            }).catch(err => console.error("Failed to save lead:", err));
 
-                // Redirect to checkout page
-                window.location.assign(`/checkout?${checkoutParams.toString()}`);
-            } catch (err) {
-                console.error("Failed to save lead:", err);
-                alert("Something went wrong. Please try again.");
-                setIsSubmitting(false);
-            }
+            // Redirect immediately without waiting for API response
+            const checkoutParams = new URLSearchParams({
+                orderId: tempOrderId,
+                product: productId.toString(),
+                quantity: quantity.toString(),
+                mealType: mealType,
+                date: deliveryDate,
+                name: name,
+                phone: phone,
+                address: location.address,
+                lat: location.lat.toString(),
+                lng: location.lng.toString(),
+                flatNo: flatHouseNo,
+                floor: floorNo,
+                building: buildingName,
+                landmark: landmark,
+                instructions: deliveryInstructions,
+                addressType: addressType,
+            });
+
+            window.location.assign(`/checkout?${checkoutParams.toString()}`);
         } else {
             // Add to cart (simulated)
             await new Promise((resolve) => setTimeout(resolve, 500));

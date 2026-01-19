@@ -194,57 +194,55 @@ function SubscribeContent() {
             return;
         }
 
-        // Submit Lead to Backend and get Order ID
-        try {
-            const response = await fetch('/api/submit-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    date: new Date().toISOString(),
-                    paymentStatus: 'Abandoned Cart',
-                    name: name,
-                    phone: phone,
-                    address: `${flatHouseNo}, ${floorNo}, ${buildingName}${landmark ? ', Near: ' + landmark : ''}`,
-                    coordinates: getCoordinatesDMS(location.lat, location.lng),
-                    mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
-                    details: `${product.name} | ${selectedPlan.meals} Meals (₹${selectedPlan.pricePerMeal}/meal) | ${mealType} | ${quantityPerDelivery}/day | ${deliverySchedule === "custom" ? customDays.join(", ").toUpperCase() : deliverySchedule.toUpperCase()}`,
-                    amount: totalPrice.toString(),
-                    startDate: startDate,
-                    deliveryInstructions: deliveryInstructions
-                })
-            });
-            const data = await response.json();
-            const orderId = data.orderId || '';
+        // Generate temporary Order ID client-side (will be replaced by server-generated one)
+        const tempOrderId = `S-${Date.now().toString().slice(-6)}`;
 
-            const checkoutParams = new URLSearchParams({
-                orderId: orderId,
-                product: productId.toString(),
-                type: "subscription",
-                plan: selectedPlan.meals.toString(),
-                pricePerMeal: selectedPlan.pricePerMeal.toString(),
-                mealType: mealType,
-                quantity: quantityPerDelivery.toString(),
-                schedule: deliverySchedule === "custom" ? customDays.join(",") : deliverySchedule,
-                startDate: startDate,
-                totalMeals: totalMeals.toString(),
-                totalPrice: totalPrice.toString(),
+        // Fire API request in background (don't wait for response)
+        fetch('/api/submit-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                date: new Date().toISOString(),
+                paymentStatus: 'Abandoned Cart',
                 name: name,
                 phone: phone,
-                address: location.address,
-                lat: location.lat.toString(),
-                lng: location.lng.toString(),
-                flatNo: flatHouseNo,
-                floor: floorNo,
-                building: buildingName,
-                landmark: landmark,
-                instructions: deliveryInstructions,
-                addressType: addressType,
-            });
-            window.location.assign(`/checkout?${checkoutParams.toString()}`);
-        } catch (err) {
-            console.error("Failed to save lead:", err);
-            alert("Something went wrong. Please try again.");
-        }
+                address: `${flatHouseNo}, ${floorNo}, ${buildingName}${landmark ? ', Near: ' + landmark : ''}`,
+                coordinates: getCoordinatesDMS(location.lat, location.lng),
+                mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
+                details: `${product.name} | ${selectedPlan.meals} Meals (₹${selectedPlan.pricePerMeal}/meal) | ${mealType} | ${quantityPerDelivery}/day | ${deliverySchedule === "custom" ? customDays.join(", ").toUpperCase() : deliverySchedule.toUpperCase()}`,
+                amount: totalPrice.toString(),
+                startDate: startDate,
+                deliveryInstructions: deliveryInstructions
+            }),
+            keepalive: true // Ensures request completes even after navigation
+        }).catch(err => console.error("Failed to save lead:", err));
+
+        // Redirect immediately without waiting for API response
+        const checkoutParams = new URLSearchParams({
+            orderId: tempOrderId,
+            product: productId.toString(),
+            type: "subscription",
+            plan: selectedPlan.meals.toString(),
+            pricePerMeal: selectedPlan.pricePerMeal.toString(),
+            mealType: mealType,
+            quantity: quantityPerDelivery.toString(),
+            schedule: deliverySchedule === "custom" ? customDays.join(",") : deliverySchedule,
+            startDate: startDate,
+            totalMeals: totalMeals.toString(),
+            totalPrice: totalPrice.toString(),
+            name: name,
+            phone: phone,
+            address: location.address,
+            lat: location.lat.toString(),
+            lng: location.lng.toString(),
+            flatNo: flatHouseNo,
+            floor: floorNo,
+            building: buildingName,
+            landmark: landmark,
+            instructions: deliveryInstructions,
+            addressType: addressType,
+        });
+        window.location.assign(`/checkout?${checkoutParams.toString()}`);
     };
 
     // Progress bar component
