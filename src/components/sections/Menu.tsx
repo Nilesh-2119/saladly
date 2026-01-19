@@ -194,14 +194,14 @@ export default function Menu() {
                                                 Bestseller
                                             </div>
                                         )}
-                                        {/* Category Badge */}
+                                        {/* Veg/Non-Veg Badge */}
                                         <div
-                                            className={`absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center ${product.category === "veg"
-                                                ? "bg-green-500"
-                                                : "bg-red-500"
+                                            className={`absolute top-3 right-3 w-6 h-6 rounded border-2 flex items-center justify-center bg-white ${product.category === "veg"
+                                                ? "border-green-600"
+                                                : "border-red-600"
                                                 }`}
                                         >
-                                            <div className="w-2 h-2 bg-white rounded-full" />
+                                            <div className={`w-3 h-3 rounded-full ${product.category === "veg" ? "bg-green-600" : "bg-red-600"}`} />
                                         </div>
                                     </div>
 

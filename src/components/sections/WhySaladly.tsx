@@ -13,7 +13,7 @@ const features = [
         icon: "⏱️",
         title: "Same-Day Delivery",
         description:
-            "Order by 10 AM and get your fresh salad delivered by lunchtime, guaranteed.",
+            "Order by 2 PM and get your fresh salad delivered by dinnertime, guaranteed.",
     },
     {
         icon: "💪",

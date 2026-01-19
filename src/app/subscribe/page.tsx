@@ -470,7 +470,7 @@ function SubscribeContent() {
                                         <span className="text-xs bg-primary text-white px-2 py-0.5 rounded">Step 2 of 3</span>
                                         How often do you want your deliveries?
                                     </h3>
-                                    <p className="text-sm text-primary mb-4">Open All Day</p>
+                                    {/* <p className="text-sm text-primary mb-4">Open All Day</p> */}
 
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                         {deliverySchedules.map((schedule) => (

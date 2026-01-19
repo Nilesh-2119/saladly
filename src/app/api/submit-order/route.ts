@@ -123,6 +123,7 @@ export async function POST(req: Request) {
         }
 
         // 2. Send Email Notification (only for new orders or paid updates)
+        // NOTE: Email is sent in background without awaiting to avoid blocking the response
         if (!isUpdate || paymentStatus === 'Paid') {
             try {
                 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
@@ -158,7 +159,8 @@ export async function POST(req: Request) {
                         `,
                     };
 
-                    await transporter.sendMail(mailOptions);
+                    // Fire and forget - don't block the response
+                    transporter.sendMail(mailOptions).catch(err => console.error('Email send error:', err));
                 }
             } catch (emailError) {
                 console.error('Email Error:', emailError);

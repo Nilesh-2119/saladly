@@ -4,7 +4,7 @@ import Menu from "@/components/sections/Menu";
 
 import HowItWorks from "@/components/sections/HowItWorks";
 import SocialProof from "@/components/sections/SocialProof";
-import LeadCapture from "@/components/sections/LeadCapture";
+// import LeadCapture from "@/components/sections/LeadCapture";
 
 export default function Home() {
     return (
@@ -15,7 +15,7 @@ export default function Home() {
 
             <HowItWorks />
             <SocialProof />
-            <LeadCapture />
+            {/* <LeadCapture /> */}
         </>
     );
 }

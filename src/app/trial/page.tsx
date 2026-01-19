@@ -369,7 +369,7 @@ export default function TrialOrderPage({
                                     <span className="px-2 py-0.5 bg-accent text-white text-xs rounded mr-2">Delivery Date</span>
                                     Select your delivery date
                                 </label>
-                                <p className="text-xs text-primary mb-1">Open All Day</p>
+                                {/* <p className="text-xs text-primary mb-1">Open All Day</p> */}
                                 <input
                                     type="date"
                                     min={today}
@@ -390,8 +390,8 @@ export default function TrialOrderPage({
                                     onChange={(e) => setMealType(e.target.value as "lunch" | "dinner")}
                                     className="input-field"
                                 >
-                                    <option value="lunch">Lunch (Delivery by 12 PM)</option>
-                                    <option value="dinner">Dinner (Delivery by 7 PM)</option>
+                                    <option value="lunch">Lunch (Delivery by 11 AM to 2PM)</option>
+                                    <option value="dinner">Dinner (Delivery by 7PM to 9PM)</option>
                                 </select>
                             </div>
                         </div>
