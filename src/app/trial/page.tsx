@@ -142,10 +142,7 @@ export default function TrialOrderPage({
     const [showMap, setShowMap] = useState(false);
 
     // Address form fields
-    const [flatHouseNo, setFlatHouseNo] = useState("");
-    const [floorNo, setFloorNo] = useState("");
-    const [buildingName, setBuildingName] = useState("");
-    const [landmark, setLandmark] = useState("");
+    const [fullAddress, setFullAddress] = useState("");
     const [deliveryInstructions, setDeliveryInstructions] = useState("");
     const [addressType, setAddressType] = useState<"home" | "work">("home");
     const [showAddressForm, setShowAddressForm] = useState(false);
@@ -184,8 +181,8 @@ export default function TrialOrderPage({
                 alert("Please enter a valid 10-digit phone number");
                 return;
             }
-            if (!flatHouseNo || !floorNo || !buildingName) {
-                alert("Please complete the delivery address form with Flat/House No, Floor, and Building Name");
+            if (!location || !fullAddress) {
+                alert("Please complete the delivery address form with Full Address");
                 return;
             }
         }
@@ -205,7 +202,7 @@ export default function TrialOrderPage({
                     paymentStatus: 'Abandoned Cart',
                     name: name,
                     phone: phone,
-                    address: `${flatHouseNo}, ${floorNo}, ${buildingName}${landmark ? ', Near: ' + landmark : ''}`,
+                    address: fullAddress,
                     coordinates: getCoordinatesDMS(location.lat, location.lng),
                     mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
                     details: `${product.name} (x${quantity}) - ${mealType} - ${deliveryDate}`,
@@ -227,10 +224,7 @@ export default function TrialOrderPage({
                 address: location.address,
                 lat: location.lat.toString(),
                 lng: location.lng.toString(),
-                flatNo: flatHouseNo,
-                floor: floorNo,
-                building: buildingName,
-                landmark: landmark,
+                fullAddress: fullAddress,
                 instructions: deliveryInstructions,
                 addressType: addressType,
             });
@@ -473,58 +467,16 @@ export default function TrialOrderPage({
                                                 </div>
                                             </div>
 
-                                            {/* Row 2: Flat/House Number + Floor Number */}
-                                            <div className="grid md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-xs text-primary font-medium mb-1">
-                                                        Flat/House Number<span className="text-red-500">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={flatHouseNo}
-                                                        onChange={(e) => setFlatHouseNo(e.target.value)}
-                                                        placeholder="e.g. Flat 101 or A-101"
-                                                        className="input-field text-sm"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs text-primary font-medium mb-1">
-                                                        Floor Number<span className="text-red-500">*</span>
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        value={floorNo}
-                                                        onChange={(e) => setFloorNo(e.target.value)}
-                                                        placeholder="e.g. 1st Floor"
-                                                        className="input-field text-sm"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* Building/Society Name */}
+                                            {/* Full Address */}
                                             <div>
                                                 <label className="block text-xs text-primary font-medium mb-1">
-                                                    Building/Society Name<span className="text-red-500">*</span>
+                                                    Full Address<span className="text-red-500">*</span>
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    value={buildingName}
-                                                    onChange={(e) => setBuildingName(e.target.value)}
-                                                    placeholder="e.g. Blue Heights Society"
-                                                    className="input-field text-sm"
-                                                />
-                                            </div>
-
-                                            {/* Landmark Area */}
-                                            <div>
-                                                <label className="block text-xs text-primary font-medium mb-1">
-                                                    Landmark Area
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={landmark}
-                                                    onChange={(e) => setLandmark(e.target.value)}
-                                                    placeholder="e.g. Near City Mall"
+                                                    value={fullAddress}
+                                                    onChange={(e) => setFullAddress(e.target.value)}
+                                                    placeholder="e.g. Flat 101, Blue Heights Society, Kharadi"
                                                     className="input-field text-sm"
                                                 />
                                             </div>
@@ -607,12 +559,9 @@ export default function TrialOrderPage({
                                                     {addressType === "home" ? "Home" : "Work"} Address
                                                 </p>
                                                 <p className="text-sm text-green-700">
-                                                    {flatHouseNo && `${flatHouseNo}, `}
-                                                    {floorNo && `${floorNo}, `}
-                                                    {buildingName}
+                                                    {fullAddress}
                                                 </p>
                                                 <p className="text-sm text-green-600">{location.address}</p>
-                                                {landmark && <p className="text-xs text-green-500 mt-1">Near: {landmark}</p>}
                                                 {deliveryInstructions && (
                                                     <p className="text-xs text-green-500 mt-1 italic">"{deliveryInstructions}"</p>
                                                 )}

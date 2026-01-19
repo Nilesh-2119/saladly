@@ -74,10 +74,7 @@ function CheckoutContent() {
     const customerName = searchParams.get("name") || "";
     const customerPhone = searchParams.get("phone") || "";
     const address = searchParams.get("address") || "";
-    const flatNo = searchParams.get("flatNo") || "";
-    const floor = searchParams.get("floor") || "";
-    const building = searchParams.get("building") || "";
-    const landmark = searchParams.get("landmark") || "";
+    const fullAddress = searchParams.get("fullAddress") || "";
     const addressType = searchParams.get("addressType") || "home";
 
     // Subscription params
@@ -100,10 +97,7 @@ function CheckoutContent() {
     const [formData, setFormData] = useState({
         name: customerName,
         phone: customerPhone,
-        flatNo: flatNo,
-        floor: floor,
-        building: building,
-        landmark: landmark,
+        fullAddress: fullAddress,
     });
 
     // Valid coupons
@@ -184,7 +178,7 @@ function CheckoutContent() {
                                 paymentStatus: 'Paid',
                                 name: customerName,
                                 phone: customerPhone,
-                                address: `${flatNo}, ${floor}, ${building}${landmark ? ', Near: ' + landmark : ''}`,
+                                address: fullAddress,
                                 coordinates: '',
                                 mapLink: '',
                                 details: isSubscription
@@ -211,7 +205,7 @@ function CheckoutContent() {
                     quantity: quantity.toString(),
                     deliveryDate: deliveryDate,
                     mealType: mealType,
-                    address: `${flatNo}, ${floor}, ${building}, ${address}`,
+                    address: fullAddress,
                 },
                 theme: {
                     color: "#22C55E",
@@ -274,10 +268,9 @@ function CheckoutContent() {
                                         <div>
                                             <p className="font-medium text-text">{customerName}</p>
                                             <p className="text-sm text-text-muted mt-1">
-                                                {flatNo && `${flatNo}, `}{floor && `${floor}, `}{building}
+                                                {fullAddress}
                                             </p>
                                             <p className="text-sm text-text-muted">{address}</p>
-                                            {landmark && <p className="text-sm text-text-muted">Near: {landmark}</p>}
                                             <p className="text-sm text-text-muted mt-2">📞 +91 {customerPhone}</p>
                                         </div>
                                     </div>

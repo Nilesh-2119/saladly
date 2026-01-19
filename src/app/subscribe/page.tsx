@@ -147,10 +147,7 @@ function SubscribeContent() {
     const [phone, setPhone] = useState("");
     const [location, setLocation] = useState<LocationData | null>(null);
     const [showMap, setShowMap] = useState(false);
-    const [flatHouseNo, setFlatHouseNo] = useState("");
-    const [floorNo, setFloorNo] = useState("");
-    const [buildingName, setBuildingName] = useState("");
-    const [landmark, setLandmark] = useState("");
+    const [fullAddress, setFullAddress] = useState("");
     const [deliveryInstructions, setDeliveryInstructions] = useState("");
     const [addressType, setAddressType] = useState<"home" | "work">("home");
     const [showAddressForm, setShowAddressForm] = useState(false);
@@ -189,8 +186,8 @@ function SubscribeContent() {
             alert("Please enter a valid 10-digit phone number");
             return;
         }
-        if (!flatHouseNo || !floorNo || !buildingName) {
-            alert("Please complete the delivery address form with Flat/House No, Floor, and Building Name");
+        if (!location || !fullAddress) {
+            alert("Please complete the delivery address form with Full Address");
             return;
         }
 
@@ -206,7 +203,7 @@ function SubscribeContent() {
                 paymentStatus: 'Abandoned Cart',
                 name: name,
                 phone: phone,
-                address: `${flatHouseNo}, ${floorNo}, ${buildingName}${landmark ? ', Near: ' + landmark : ''}`,
+                address: fullAddress,
                 coordinates: getCoordinatesDMS(location.lat, location.lng),
                 mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
                 details: `${product.name} | ${selectedPlan.meals} Meals (₹${selectedPlan.pricePerMeal}/meal) | ${mealType} | ${quantityPerDelivery}/day | ${deliverySchedule === "custom" ? customDays.join(", ").toUpperCase() : deliverySchedule.toUpperCase()}`,
@@ -235,10 +232,7 @@ function SubscribeContent() {
             address: location.address,
             lat: location.lat.toString(),
             lng: location.lng.toString(),
-            flatNo: flatHouseNo,
-            floor: floorNo,
-            building: buildingName,
-            landmark: landmark,
+            fullAddress: fullAddress,
             instructions: deliveryInstructions,
             addressType: addressType,
         });
@@ -636,58 +630,16 @@ function SubscribeContent() {
                                                             </div>
                                                         </div>
 
-                                                        {/* Row 2: Flat/House Number + Floor Number */}
-                                                        <div className="grid md:grid-cols-2 gap-4">
-                                                            <div>
-                                                                <label className="block text-xs text-primary font-medium mb-1">
-                                                                    Flat/House Number<span className="text-red-500">*</span>
-                                                                </label>
-                                                                <input
-                                                                    type="text"
-                                                                    value={flatHouseNo}
-                                                                    onChange={(e) => setFlatHouseNo(e.target.value)}
-                                                                    placeholder="e.g. Flat 101 or A-101"
-                                                                    className="input-field text-sm"
-                                                                />
-                                                            </div>
-                                                            <div>
-                                                                <label className="block text-xs text-primary font-medium mb-1">
-                                                                    Floor Number<span className="text-red-500">*</span>
-                                                                </label>
-                                                                <input
-                                                                    type="text"
-                                                                    value={floorNo}
-                                                                    onChange={(e) => setFloorNo(e.target.value)}
-                                                                    placeholder="e.g. 1st Floor"
-                                                                    className="input-field text-sm"
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Building/Society Name */}
+                                                        {/* Full Address */}
                                                         <div>
                                                             <label className="block text-xs text-primary font-medium mb-1">
-                                                                Building/Society Name<span className="text-red-500">*</span>
+                                                                Full Address<span className="text-red-500">*</span>
                                                             </label>
                                                             <input
                                                                 type="text"
-                                                                value={buildingName}
-                                                                onChange={(e) => setBuildingName(e.target.value)}
-                                                                placeholder="e.g. Blue Heights Society"
-                                                                className="input-field text-sm"
-                                                            />
-                                                        </div>
-
-                                                        {/* Landmark Area */}
-                                                        <div>
-                                                            <label className="block text-xs text-primary font-medium mb-1">
-                                                                Landmark Area
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                value={landmark}
-                                                                onChange={(e) => setLandmark(e.target.value)}
-                                                                placeholder="e.g. Near City Mall"
+                                                                value={fullAddress}
+                                                                onChange={(e) => setFullAddress(e.target.value)}
+                                                                placeholder="e.g. Flat 101, Blue Heights Society, Kharadi"
                                                                 className="input-field text-sm"
                                                             />
                                                         </div>
