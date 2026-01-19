@@ -122,7 +122,7 @@ export default function Hero() {
                                 <span className="text-sm font-semibold text-text">Delivering only in these areas</span>
                             </div>
                             <div className="flex flex-wrap gap-1.5">
-                                {["Kharadi", "Ubale Nagar", "Mundhwa", "Keshavnagar", "Wadgaonsheri", "Magarpatta", "Amanora", "Viman Nagar", "Wagholi", "Kalyani Nagar", "Koregaon Park", "Yerwada"].map((area) => (
+                                {["Kharadi", "Ubale Nagar", "Mundhwa", "Keshavnagar", "Wadgaon sheri", "Magarpatta", "Amanora", "Viman Nagar", "Wagholi", "Kalyani Nagar", "Koregaon Park", "Yerwada"].map((area) => (
                                     <span key={area} className="px-2 py-0.5 bg-primary-50 text-primary-dark text-xs rounded-full">
                                         {area}
                                     </span>
@@ -196,7 +196,7 @@ export default function Hero() {
             </div>
 
             {/* Scroll Indicator */}
-            <motion.div
+            {/* <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2 }}
@@ -213,7 +213,7 @@ export default function Hero() {
                         </svg>
                     </motion.div>
                 </Link>
-            </motion.div>
+            </motion.div> */}
         </section>
     );
 }
