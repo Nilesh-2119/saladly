@@ -60,11 +60,11 @@ const products: Record<number, {
     1: {
         id: 1,
         name: "Lean Protein Veg Meal",
-        description: "250g Bowl - Paneer/Mushroom/Ripe Fruit(80g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
+        description: "250g Bowl - Paneer/Mushroom/Ripe Fruit(80g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
         image: "/images/lean-protein-veg-meal.jpeg",
         category: "veg",
         nutrition: { calories: "~315 kcal", protein: "13g", fat: "21g", carbs: "25g" },
-        contains: "Paneer/Mushroom/Ripe Fruit(80g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love"
+        contains: "Paneer/Mushroom/Ripe Fruit(80g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love"
     },
     2: {
         id: 2,

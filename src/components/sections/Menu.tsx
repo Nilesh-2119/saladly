@@ -28,7 +28,7 @@ const products: Product[] = [
     {
         id: 1,
         name: "Lean Protein Veg Meal",
-        description: "Paneer/Mushroom/Ripe Fruit (80g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings",
+        description: "Paneer/Mushroom/Ripe Fruit (80g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings",
         price: 199,
         originalPrice: 299,
         weight: "250g Bowl",
@@ -43,7 +43,7 @@ const products: Product[] = [
     {
         id: 2,
         name: "Power Protein Veg Meal",
-        description: "Paneer/Mushroom/Ripe Fruit (120g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings",
+        description: "Paneer/Mushroom/Ripe Fruit (120g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings",
         price: 229,
         originalPrice: 329,
         weight: "500g Bowl",
@@ -58,7 +58,7 @@ const products: Product[] = [
     {
         id: 3,
         name: "Lean Protein Chicken Meal",
-        description: "Chicken (80g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings",
+        description: "Chicken (80g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings",
         price: 199,
         originalPrice: 299,
         weight: "250g Bowl",
@@ -73,7 +73,7 @@ const products: Product[] = [
     {
         id: 4,
         name: "Power Protein Chicken Meal",
-        description: "Chicken (150g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings",
+        description: "Chicken (150g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings",
         price: 229,
         originalPrice: 329,
         weight: "500g Bowl",

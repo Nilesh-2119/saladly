@@ -60,7 +60,7 @@ const products: Record<number, Product> = {
     1: {
         id: 1,
         name: "Lean Protein Veg Meal",
-        description: "Contains 250g Bowl - Paneer/Mushroom/Ripe Fruit (80g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
+        description: "Contains 250g Bowl - Paneer/Mushroom/Ripe Fruit (80g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
         price: 199,
         originalPrice: 299,
         weight: "250g Bowl",
@@ -74,7 +74,7 @@ const products: Record<number, Product> = {
     2: {
         id: 2,
         name: "Power Protein Veg Meal",
-        description: "Contains 500g Bowl - Paneer/Mushroom/Ripe Fruit (120g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
+        description: "Contains 500g Bowl - Paneer/Mushroom/Ripe Fruit (120g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
         price: 229,
         originalPrice: 329,
         weight: "500g Bowl",
@@ -88,7 +88,7 @@ const products: Record<number, Product> = {
     3: {
         id: 3,
         name: "Lean Protein Chicken Meal",
-        description: "Contains 250g Bowl - Chicken (80g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
+        description: "Contains 250g Bowl - Chicken (80g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
         price: 199,
         originalPrice: 299,
         weight: "250g Bowl",
@@ -102,7 +102,7 @@ const products: Record<number, Product> = {
     4: {
         id: 4,
         name: "Power Protein Chicken Meal",
-        description: "Contains 500g Bowl - Chicken (150g), Millets/Noodles/Pasta, Chickpes/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
+        description: "Contains 500g Bowl - Chicken (150g), Millets/Noodles/Pasta, Chickpease/Olives, Pomegranates, Dressing, Leaves, Boiled vegetables, Toppings, Health and Love",
         price: 229,
         originalPrice: 329,
         weight: "500g Bowl",
