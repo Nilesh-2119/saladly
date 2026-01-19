@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
+import { getUserData, saveUserData } from "@/utils/userStorage";
 
 // Dynamic import to prevent SSR hydration issues with Google Maps
 const LocationSelector = dynamic(
@@ -152,6 +153,21 @@ function SubscribeContent() {
     const [addressType, setAddressType] = useState<"home" | "work">("home");
     const [showAddressForm, setShowAddressForm] = useState(false);
 
+    // Load saved user data on mount
+    useEffect(() => {
+        const savedData = getUserData();
+        if (savedData) {
+            if (savedData.name) setName(savedData.name);
+            if (savedData.phone) setPhone(savedData.phone);
+            if (savedData.fullAddress) setFullAddress(savedData.fullAddress);
+            if (savedData.deliveryInstructions) setDeliveryInstructions(savedData.deliveryInstructions);
+            if (savedData.addressType) setAddressType(savedData.addressType);
+            if (savedData.location) {
+                setLocation(savedData.location);
+            }
+        }
+    }, []);
+
     // Calculate total
     const totalMeals = selectedPlan.meals * quantityPerDelivery * (mealType === "both" ? 2 : 1);
     const totalPrice = selectedPlan.pricePerMeal * totalMeals;
@@ -213,6 +229,20 @@ function SubscribeContent() {
             }),
             keepalive: true // Ensures request completes even after navigation
         }).catch(err => console.error("Failed to save lead:", err));
+
+        // Save user data to localStorage for future visits
+        saveUserData({
+            name,
+            phone,
+            fullAddress,
+            deliveryInstructions,
+            addressType,
+            location: location ? {
+                lat: location.lat,
+                lng: location.lng,
+                address: location.address
+            } : undefined
+        });
 
         // Redirect immediately without waiting for API response
         const checkoutParams = new URLSearchParams({
