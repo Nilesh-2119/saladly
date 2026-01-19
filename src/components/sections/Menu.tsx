@@ -318,7 +318,7 @@ export default function Menu() {
                     {/* WhatsApp CTA for customized orders */}
                     <div className="mt-6">
                         <a
-                            href="https://wa.me/919011020539?text=Hi!%20I%20want%20to%20order%20a%20customized%20meal"
+                            href="https://wa.me/918208747937?text=Hi!%20I%20want%20to%20order%20a%20customized%20meal"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
