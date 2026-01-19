@@ -66,7 +66,6 @@ function CheckoutContent() {
     const router = useRouter();
 
     // Get order details from URL params
-    const existingOrderId = searchParams.get("orderId") || ""; // Order ID from initial lead creation
     const productId = parseInt(searchParams.get("product") || "1");
     const quantity = parseInt(searchParams.get("quantity") || "1");
     const mealType = searchParams.get("mealType") || "dinner";
@@ -76,6 +75,9 @@ function CheckoutContent() {
     const address = searchParams.get("address") || "";
     const fullAddress = searchParams.get("fullAddress") || "";
     const addressType = searchParams.get("addressType") || "home";
+    const coordinates = searchParams.get("coordinates") || "";
+    const mapLink = searchParams.get("mapLink") || "";
+    const deliveryInstructions = searchParams.get("instructions") || "";
 
     // Subscription params
     const isSubscription = searchParams.get("type") === "subscription";
@@ -168,32 +170,33 @@ function CheckoutContent() {
                 description: `${product.name} x ${quantity}`,
                 image: "/images/logo.png",
                 handler: async function (response: RazorpayResponse) {
-                    // Payment successful - update existing order to Paid status
+                    // Payment successful - create order NOW
                     try {
                         const orderResponse = await fetch('/api/submit-order', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                orderId: existingOrderId, // Pass existing Order ID to UPDATE the row
+                                date: new Date().toISOString(),
                                 paymentStatus: 'Paid',
-                                name: customerName,
-                                phone: customerPhone,
-                                address: fullAddress,
-                                coordinates: '',
-                                mapLink: '',
+                                name: formData.name || customerName,
+                                phone: formData.phone || customerPhone,
+                                address: formData.fullAddress || fullAddress,
+                                coordinates: coordinates,
+                                mapLink: mapLink,
                                 details: isSubscription
                                     ? `${totalMeals} Meals Plan @ ₹${pricePerMeal}/meal - ${mealType} - Schedule: ${schedule}`
                                     : `${product.name} x ${quantity} - ${mealType} - ${deliveryDate}`,
                                 amount: total.toString(),
-                                deliveryInstructions: ''
+                                startDate: deliveryDate,
+                                deliveryInstructions: deliveryInstructions
                             })
                         });
                         const orderData = await orderResponse.json();
-                        const orderId = orderData.orderId || existingOrderId || response.razorpay_payment_id;
+                        const orderId = orderData.orderId || response.razorpay_payment_id;
                         router.push(`/order-success?orderId=${orderId}&method=online`);
                     } catch {
-                        // Fallback to existing Order ID or Razorpay ID
-                        router.push(`/order-success?orderId=${existingOrderId || response.razorpay_payment_id}&method=online`);
+                        // Fallback to Razorpay ID if API fails
+                        router.push(`/order-success?orderId=${response.razorpay_payment_id}&method=online`);
                     }
                 },
                 prefill: {

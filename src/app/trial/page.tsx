@@ -206,65 +206,39 @@ export default function TrialOrderPage({
         setIsSubmitting(true);
 
         if (action === "buy") {
-            try {
-                // Wait for API response to get server-generated Order ID
-                const response = await fetch('/api/submit-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        date: new Date().toISOString(),
-                        paymentStatus: 'Abandoned Cart',
-                        name: name,
-                        phone: phone,
-                        address: fullAddress,
-                        coordinates: getCoordinatesDMS(location.lat, location.lng),
-                        mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
-                        details: `${product.name} (x${quantity}) - ${mealType} - ${deliveryDate}`,
-                        amount: (product.price * quantity).toString(),
-                        deliveryInstructions: deliveryInstructions
-                    })
-                });
+            // Save user data to localStorage for future visits
+            saveUserData({
+                name,
+                phone,
+                fullAddress,
+                deliveryInstructions,
+                addressType,
+                location: location ? {
+                    lat: location.lat,
+                    lng: location.lng,
+                    address: location.address
+                } : undefined
+            });
 
-                const data = await response.json();
-                const serverOrderId = data.orderId || `S-${Date.now().toString().slice(-6)}`;
+            // Redirect immediately to checkout (order created after payment)
+            const checkoutParams = new URLSearchParams({
+                product: productId.toString(),
+                quantity: quantity.toString(),
+                mealType: mealType,
+                date: deliveryDate,
+                name: name,
+                phone: phone,
+                address: location.address,
+                lat: location.lat.toString(),
+                lng: location.lng.toString(),
+                fullAddress: fullAddress,
+                instructions: deliveryInstructions,
+                addressType: addressType,
+                coordinates: getCoordinatesDMS(location.lat, location.lng),
+                mapLink: `https://www.google.com/maps/place/${location.lat},${location.lng}`,
+            });
 
-                // Save user data to localStorage for future visits
-                saveUserData({
-                    name,
-                    phone,
-                    fullAddress,
-                    deliveryInstructions,
-                    addressType,
-                    location: location ? {
-                        lat: location.lat,
-                        lng: location.lng,
-                        address: location.address
-                    } : undefined
-                });
-
-                // Redirect with server-generated order ID
-                const checkoutParams = new URLSearchParams({
-                    orderId: serverOrderId,
-                    product: productId.toString(),
-                    quantity: quantity.toString(),
-                    mealType: mealType,
-                    date: deliveryDate,
-                    name: name,
-                    phone: phone,
-                    address: location.address,
-                    lat: location.lat.toString(),
-                    lng: location.lng.toString(),
-                    fullAddress: fullAddress,
-                    instructions: deliveryInstructions,
-                    addressType: addressType,
-                });
-
-                window.location.assign(`/checkout?${checkoutParams.toString()}`);
-            } catch (err) {
-                console.error("Failed to save lead:", err);
-                setIsSubmitting(false);
-                alert("Something went wrong. Please try again.");
-            }
+            window.location.assign(`/checkout?${checkoutParams.toString()}`);
         } else {
             // Add to cart (simulated)
             await new Promise((resolve) => setTimeout(resolve, 500));
