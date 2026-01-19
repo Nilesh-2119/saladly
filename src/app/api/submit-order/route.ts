@@ -54,11 +54,23 @@ export async function POST(req: Request) {
 
         // 1. Append to or Update Google Sheet
         try {
-            if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !process.env.GOOGLE_SHEET_ID) {
+            // Check for either single key or split key parts
+            const hasSingleKey = !!process.env.GOOGLE_PRIVATE_KEY;
+            const hasSplitKey = !!(process.env.GOOGLE_PRIVATE_KEY_PART1 && process.env.GOOGLE_PRIVATE_KEY_PART2);
+
+            if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || (!hasSingleKey && !hasSplitKey) || !process.env.GOOGLE_SHEET_ID) {
                 console.error('Missing Google Sheets credentials');
             } else {
-                // Handle both base64 and plain private key formats
-                let privateKey = process.env.GOOGLE_PRIVATE_KEY;
+                // Handle split key, base64, or plain private key formats
+                let privateKey = '';
+
+                if (hasSplitKey) {
+                    // Join the two parts
+                    privateKey = (process.env.GOOGLE_PRIVATE_KEY_PART1 || '') + (process.env.GOOGLE_PRIVATE_KEY_PART2 || '');
+                } else {
+                    privateKey = process.env.GOOGLE_PRIVATE_KEY || '';
+                }
+
                 if (!privateKey.startsWith('-----BEGIN')) {
                     // Decode base64 encoded key
                     privateKey = Buffer.from(privateKey, 'base64').toString('utf-8');
