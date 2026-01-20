@@ -132,9 +132,11 @@ export default function TrialOrderPage({
 
     // Form state
     const [quantity, setQuantity] = useState(1);
-    const [deliveryDate, setDeliveryDate] = useState(
-        new Date().toISOString().split("T")[0]
-    );
+    const [deliveryDate, setDeliveryDate] = useState(() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 1);
+        return d.toISOString().split("T")[0];
+    });
     const [mealType, setMealType] = useState<"lunch" | "dinner">("dinner");
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
