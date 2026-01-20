@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         const body = await req.json();
         const {
             orderId, // If provided, update existing row; if not, create new
-            date,
+            // date, // Ignore client date, generate server-side
             paymentStatus, // 'Paid' or 'Abandoned Cart'
             name,
             phone,
@@ -51,6 +51,20 @@ export async function POST(req: Request) {
 
         let finalOrderId = orderId || 'S-1001';
         let isUpdate = !!orderId; // If orderId is provided, this is an update
+
+        // Generate Server-Side Date in IST (UTC + 5:30)
+        // Format: DD-MM-YYYY, HH:MM
+        const now = new Date();
+        const istOffset = 5.5 * 60 * 60 * 1000;
+        const istTime = new Date(now.getTime() + istOffset);
+
+        const day = istTime.getUTCDate().toString().padStart(2, '0');
+        const month = (istTime.getUTCMonth() + 1).toString().padStart(2, '0');
+        const year = istTime.getUTCFullYear();
+        const hours = istTime.getUTCHours().toString().padStart(2, '0');
+        const minutes = istTime.getUTCMinutes().toString().padStart(2, '0');
+
+        const formattedDate = `${day}-${month}-${year}, ${hours}:${minutes}`;
 
         // 1. Append to or Update Google Sheet
         try {
@@ -105,7 +119,7 @@ export async function POST(req: Request) {
                     await sheet.addRow({
                         'Order ID': finalOrderId,
                         'Payment Status': paymentStatus || 'Abandoned Cart',
-                        'Date': date,
+                        'Date': formattedDate,
                         'Name': name,
                         'Phone': phone,
                         'Address': address,
