@@ -367,6 +367,7 @@ function SubscribeContent() {
                     {/* Step Content */}
                     <AnimatePresence mode="wait">
                         {/* Step 1: Meal Selection */}
+                        {/* Step 1: Delivery Address & Basic Info */}
                         {currentStep === 1 && (
                             <motion.div
                                 key="step1"
@@ -375,203 +376,10 @@ function SubscribeContent() {
                                 exit={{ opacity: 0, x: -20 }}
                                 className="space-y-4"
                             >
-                                {/* Meal Count Selection */}
                                 <div className="bg-white rounded-2xl shadow-card p-5">
                                     <h3 className="font-display font-bold text-text mb-4 flex items-center gap-2">
                                         <span className="text-xs bg-primary text-white px-2 py-0.5 rounded">Step 1 of 3</span>
-                                        You can still increase number of meals you would want to subscribe for.
-                                    </h3>
-
-                                    {/* Large Number Display */}
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            value={selectedPlan.meals}
-                                            readOnly
-                                            className="w-full py-4 px-6 text-3xl font-bold text-center border-2 border-gray-200 rounded-xl bg-gray-50 text-text focus:outline-none"
-                                        />
-                                    </div>
-
-                                    {/* Quick Select Buttons */}
-                                    <div className="flex flex-wrap justify-center gap-2 mt-4">
-                                        {plans.map((plan) => (
-                                            <button
-                                                key={plan.meals}
-                                                onClick={() => setSelectedPlan(plan)}
-                                                className={`px-5 py-2.5 rounded-lg font-bold text-sm transition-all ${selectedPlan.meals === plan.meals
-                                                    ? "bg-primary text-white shadow-lg shadow-primary/30"
-                                                    : "bg-gray-100 text-text-muted hover:bg-gray-200"
-                                                    }`}
-                                            >
-                                                {plan.meals}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    {/* Price per meal info */}
-                                    <p className="text-center text-sm text-text-muted mt-3">
-                                        ₹{selectedPlan.pricePerMeal}/meal • <span className="text-green-600 font-medium">{selectedPlan.discount}</span>
-                                    </p>
-                                </div>
-
-                                {/* Meal Type Selection */}
-                                <div className="bg-white rounded-2xl shadow-card p-5">
-                                    <h3 className="font-display font-bold text-text mb-4 flex items-center gap-2">
-                                        <span className="text-xs bg-primary text-white px-2 py-0.5 rounded">Step 1 of 3</span>
-                                        Please choose Lunch, Dinner or Both
-                                    </h3>
-
-                                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                                        <div className="flex flex-wrap gap-3">
-                                            {(["lunch", "dinner", "both"] as const).map((type) => (
-                                                <button
-                                                    key={type}
-                                                    onClick={() => setMealType(type)}
-                                                    className={`px-6 py-3 rounded-lg font-medium transition-all ${mealType === type
-                                                        ? "bg-primary text-white"
-                                                        : "bg-gray-100 text-text hover:bg-gray-200"
-                                                        }`}
-                                                >
-                                                    {type.charAt(0).toUpperCase() + type.slice(1)} {mealType === type && "✓"}
-                                                </button>
-                                            ))}
-                                        </div>
-
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-sm text-text-muted">Quantity per delivery</span>
-                                            <div className="flex items-center border rounded-lg">
-                                                <button
-                                                    onClick={() => setQuantityPerDelivery(Math.max(1, quantityPerDelivery - 1))}
-                                                    className="px-3 py-2 text-primary hover:bg-gray-100"
-                                                >
-                                                    -
-                                                </button>
-                                                <span className="px-4 py-2 font-medium">{quantityPerDelivery}</span>
-                                                <button
-                                                    onClick={() => setQuantityPerDelivery(Math.min(5, quantityPerDelivery + 1))}
-                                                    className="px-3 py-2 text-primary hover:bg-gray-100"
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-
-                        {/* Step 2: Delivery Schedule */}
-                        {currentStep === 2 && (
-                            <motion.div
-                                key="step2"
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                className="space-y-4"
-                            >
-                                <div className="bg-white rounded-2xl shadow-card p-5">
-                                    <h3 className="font-display font-bold text-text mb-4 flex items-center gap-2">
-                                        <span className="text-xs bg-primary text-white px-2 py-0.5 rounded">Step 2 of 3</span>
-                                        How often do you want your deliveries?
-                                    </h3>
-                                    {/* <p className="text-sm text-primary mb-4">Open All Day</p> */}
-
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                        {deliverySchedules.map((schedule) => (
-                                            <button
-                                                key={schedule.id}
-                                                onClick={() => setDeliverySchedule(schedule.id)}
-                                                className={`px-4 py-3 rounded-lg font-medium transition-all ${deliverySchedule === schedule.id
-                                                    ? "bg-primary text-white"
-                                                    : "bg-gray-100 text-text hover:bg-gray-200"
-                                                    }`}
-                                            >
-                                                {schedule.label}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    {/* Custom Days Selector */}
-                                    {deliverySchedule === "custom" && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: "auto" }}
-                                            className="mt-4 pt-4 border-t border-gray-200"
-                                        >
-                                            <p className="text-sm font-medium text-text mb-3">Select your delivery days:</p>
-                                            <div className="flex flex-wrap gap-2 justify-center">
-                                                {[
-                                                    { id: "mon", label: "Mon" },
-                                                    { id: "tue", label: "Tue" },
-                                                    { id: "wed", label: "Wed" },
-                                                    { id: "thu", label: "Thu" },
-                                                    { id: "fri", label: "Fri" },
-                                                    { id: "sat", label: "Sat" },
-                                                    { id: "sun", label: "Sun" },
-                                                ].map((day) => (
-                                                    <button
-                                                        key={day.id}
-                                                        onClick={() => {
-                                                            setCustomDays(prev =>
-                                                                prev.includes(day.id)
-                                                                    ? prev.filter(d => d !== day.id)
-                                                                    : [...prev, day.id]
-                                                            );
-                                                        }}
-                                                        className={`w-12 h-12 rounded-full font-medium text-sm transition-all ${customDays.includes(day.id)
-                                                            ? "bg-primary text-white shadow-lg shadow-primary/30"
-                                                            : "bg-gray-100 text-text hover:bg-gray-200"
-                                                            }`}
-                                                    >
-                                                        {day.label}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                            {customDays.length === 0 && (
-                                                <p className="text-xs text-red-500 mt-2 text-center">Please select at least one day</p>
-                                            )}
-                                        </motion.div>
-                                    )}
-                                </div>
-                            </motion.div>
-                        )}
-
-                        {/* Step 3: Start Date */}
-                        {currentStep === 3 && (
-                            <motion.div
-                                key="step3"
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                className="space-y-4"
-                            >
-                                <div className="bg-white rounded-2xl shadow-card p-5">
-                                    <h3 className="font-display font-bold text-text mb-4 flex items-center gap-2">
-                                        <span className="text-xs bg-primary text-white px-2 py-0.5 rounded">Step 3 of 3</span>
-                                        When do you want to start?
-                                    </h3>
-                                    <p className="text-sm text-primary mb-2">*Tomorrow</p>
-
-                                    <input
-                                        type="date"
-                                        value={startDate}
-                                        onChange={(e) => setStartDate(e.target.value)}
-                                        min={getMinDate()}
-                                        className="w-full p-4 border border-gray-300 rounded-xl text-text focus:ring-2 focus:ring-primary focus:border-transparent"
-                                    />
-
-                                    <p className="text-sm text-primary mt-4">
-                                        *Be Assured, you can cancel and reschedule your Meals anytime via website or mobile app.
-                                    </p>
-                                </div>
-
-                                {/* Delivery Address Section (same as trial page) */}
-                                <div className="bg-white rounded-2xl shadow-card p-5">
-                                    <h3 className="font-display font-bold text-text mb-4 flex items-center gap-2">
-                                        <span className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm">
-                                            📍
-                                        </span>
-                                        Delivery Address
+                                        Where should we deliver?
                                     </h3>
 
                                     <div className="space-y-5">
@@ -710,10 +518,225 @@ function SubscribeContent() {
                                         </div>
                                     </div>
                                 </div>
+                            </motion.div>
+                        )}
+
+                        {/* Step 2: Plan Selection & Scheduling */}
+                        {currentStep === 2 && (
+                            <motion.div
+                                key="step2"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="space-y-4"
+                            >
+                                {/* Meal Count Selection */}
+                                <div className="bg-white rounded-2xl shadow-card p-5">
+                                    <h3 className="font-display font-bold text-text mb-4 flex items-center gap-2">
+                                        <span className="text-xs bg-primary text-white px-2 py-0.5 rounded">Step 2 of 3</span>
+                                        Select your meal plan
+                                    </h3>
+
+                                    {/* Large Number Display */}
+                                    <div className="relative">
+                                        <input
+                                            type="text"
+                                            value={selectedPlan.meals}
+                                            readOnly
+                                            className="w-full py-4 px-6 text-3xl font-bold text-center border-2 border-gray-200 rounded-xl bg-gray-50 text-text focus:outline-none"
+                                        />
+                                    </div>
+
+                                    {/* Quick Select Buttons */}
+                                    <div className="flex flex-wrap justify-center gap-2 mt-4">
+                                        {plans.map((plan) => (
+                                            <button
+                                                key={plan.meals}
+                                                onClick={() => setSelectedPlan(plan)}
+                                                className={`px-5 py-2.5 rounded-lg font-bold text-sm transition-all ${selectedPlan.meals === plan.meals
+                                                    ? "bg-primary text-white shadow-lg shadow-primary/30"
+                                                    : "bg-gray-100 text-text-muted hover:bg-gray-200"
+                                                    }`}
+                                            >
+                                                {plan.meals}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Price per meal info */}
+                                    <p className="text-center text-sm text-text-muted mt-3">
+                                        ₹{selectedPlan.pricePerMeal}/meal • <span className="text-green-600 font-medium">{selectedPlan.discount}</span>
+                                    </p>
+                                </div>
+
+                                {/* Meal Type Selection */}
+                                <div className="bg-white rounded-2xl shadow-card p-5">
+                                    <h3 className="font-display font-bold text-text mb-4">
+                                        Choose Lunch, Dinner or Both
+                                    </h3>
+
+                                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                                        <div className="flex flex-wrap gap-3">
+                                            {(["lunch", "dinner", "both"] as const).map((type) => (
+                                                <button
+                                                    key={type}
+                                                    onClick={() => setMealType(type)}
+                                                    className={`px-6 py-3 rounded-lg font-medium transition-all ${mealType === type
+                                                        ? "bg-primary text-white"
+                                                        : "bg-gray-100 text-text hover:bg-gray-200"
+                                                        }`}
+                                                >
+                                                    {type.charAt(0).toUpperCase() + type.slice(1)} {mealType === type && "✓"}
+                                                </button>
+                                            ))}
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-sm text-text-muted">Quantity per delivery</span>
+                                            <div className="flex items-center border rounded-lg">
+                                                <button
+                                                    onClick={() => setQuantityPerDelivery(Math.max(1, quantityPerDelivery - 1))}
+                                                    className="px-3 py-2 text-primary hover:bg-gray-100"
+                                                >
+                                                    -
+                                                </button>
+                                                <span className="px-4 py-2 font-medium">{quantityPerDelivery}</span>
+                                                <button
+                                                    onClick={() => setQuantityPerDelivery(Math.min(5, quantityPerDelivery + 1))}
+                                                    className="px-3 py-2 text-primary hover:bg-gray-100"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Delivery Schedule */}
+                                <div className="bg-white rounded-2xl shadow-card p-5">
+                                    <h3 className="font-display font-bold text-text mb-4">
+                                        How often do you want deliveries?
+                                    </h3>
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                        {deliverySchedules.map((schedule) => (
+                                            <button
+                                                key={schedule.id}
+                                                onClick={() => setDeliverySchedule(schedule.id)}
+                                                className={`px-4 py-3 rounded-lg font-medium transition-all ${deliverySchedule === schedule.id
+                                                    ? "bg-primary text-white"
+                                                    : "bg-gray-100 text-text hover:bg-gray-200"
+                                                    }`}
+                                            >
+                                                {schedule.label}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Custom Days Selector */}
+                                    {deliverySchedule === "custom" && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            className="mt-4 pt-4 border-t border-gray-200"
+                                        >
+                                            <p className="text-sm font-medium text-text mb-3">Select your delivery days:</p>
+                                            <div className="flex flex-wrap gap-2 justify-center">
+                                                {[
+                                                    { id: "mon", label: "Mon" },
+                                                    { id: "tue", label: "Tue" },
+                                                    { id: "wed", label: "Wed" },
+                                                    { id: "thu", label: "Thu" },
+                                                    { id: "fri", label: "Fri" },
+                                                    { id: "sat", label: "Sat" },
+                                                    { id: "sun", label: "Sun" },
+                                                ].map((day) => (
+                                                    <button
+                                                        key={day.id}
+                                                        onClick={() => {
+                                                            setCustomDays(prev =>
+                                                                prev.includes(day.id)
+                                                                    ? prev.filter(d => d !== day.id)
+                                                                    : [...prev, day.id]
+                                                            );
+                                                        }}
+                                                        className={`w-12 h-12 rounded-full font-medium text-sm transition-all ${customDays.includes(day.id)
+                                                            ? "bg-primary text-white shadow-lg shadow-primary/30"
+                                                            : "bg-gray-100 text-text hover:bg-gray-200"
+                                                            }`}
+                                                    >
+                                                        {day.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            {customDays.length === 0 && (
+                                                <p className="text-xs text-red-500 mt-2 text-center">Please select at least one day</p>
+                                            )}
+                                        </motion.div>
+                                    )}
+                                </div>
+
+                                {/* Start Date */}
+                                <div className="bg-white rounded-2xl shadow-card p-5">
+                                    <h3 className="font-display font-bold text-text mb-4">
+                                        When do you want to start?
+                                    </h3>
+                                    <p className="text-sm text-primary mb-2">*Tomorrow or later</p>
+
+                                    <input
+                                        type="date"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        min={getMinDate()}
+                                        className="w-full p-4 border border-gray-300 rounded-xl text-text focus:ring-2 focus:ring-primary focus:border-transparent"
+                                    />
+                                </div>
+                            </motion.div>
+                        )}
+
+                        {/* Step 3: Order Summary */}
+                        {currentStep === 3 && (
+                            <motion.div
+                                key="step3"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="space-y-4"
+                            >
+                                {/* Delivery Address Summary */}
+                                <div className="bg-white rounded-2xl shadow-card p-5">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h3 className="font-display font-bold text-text flex items-center gap-2">
+                                            <span className="text-xs bg-primary text-white px-2 py-0.5 rounded">Step 3 of 3</span>
+                                            Delivery Address
+                                        </h3>
+                                        <button onClick={() => setCurrentStep(1)} className="text-sm text-primary hover:underline">
+                                            Edit
+                                        </button>
+                                    </div>
+                                    <div className="bg-gray-50 rounded-xl p-4">
+                                        <div className="flex items-start gap-3">
+                                            <span className="text-xl">{addressType === "home" ? "🏠" : "💼"}</span>
+                                            <div>
+                                                <p className="font-medium text-text">{name}</p>
+                                                <p className="text-sm text-text-muted">{phone}</p>
+                                                <p className="text-sm text-text-muted mt-1">{fullAddress}</p>
+                                                {deliveryInstructions && (
+                                                    <p className="text-xs text-primary mt-1">📝 {deliveryInstructions}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 {/* Order Summary */}
                                 <div className="bg-white rounded-2xl shadow-card p-5">
-                                    <h3 className="font-display font-bold text-text mb-3">Order Summary</h3>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h3 className="font-display font-bold text-text">Order Summary</h3>
+                                        <button onClick={() => setCurrentStep(2)} className="text-sm text-primary hover:underline">
+                                            Edit Plan
+                                        </button>
+                                    </div>
                                     <div className="space-y-2 text-sm">
                                         <div className="flex justify-between">
                                             <span className="text-text-muted">Plan</span>
