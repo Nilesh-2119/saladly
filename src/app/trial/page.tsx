@@ -172,8 +172,10 @@ export default function TrialOrderPage({
         ((product.originalPrice - product.price) / product.originalPrice) * 100
     );
 
-    // Get minimum date (today)
-    const today = new Date().toISOString().split("T")[0];
+    // Get minimum date (tomorrow - no same-day delivery)
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const minDate = tomorrow.toISOString().split("T")[0];
 
     // Handle location selection from map
     const handleLocationSelect = (selectedLocation: LocationData) => {
@@ -376,7 +378,7 @@ export default function TrialOrderPage({
                                 {/* <p className="text-xs text-primary mb-1">Open All Day</p> */}
                                 <input
                                     type="date"
-                                    min={today}
+                                    min={minDate}
                                     value={deliveryDate}
                                     onChange={(e) => setDeliveryDate(e.target.value)}
                                     className="input-field"
